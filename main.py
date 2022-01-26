@@ -6,8 +6,8 @@ import random
 import ErrorHandling
 import Reactions
 
-TOKEN = 'OTM1NTg0NjUyMDk2MzQwMDQ5.YfAxGw.6w41apzNyq221JXxL1wXUzorlz0'
-GUILD = 'SteppingBeast Discord'
+TOKEN = 'TOKEN'
+GUILD = 'GUILD'
 
 intents = discord.Intents.all()
 client = commands.Bot(intents=intents, command_prefix='%')

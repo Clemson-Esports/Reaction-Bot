@@ -6,17 +6,17 @@ class Reactions(commands.Cog, name= "Reactions"):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.group(
-        aliases=['rr'], invoke_without_command=True
-    )
-    @commands.guild_only()
-    async def add_role(self, ctx, emoji, role=discord.Role):
-        if role is None:
-            await ctx.send("You did not give me a role to add!")
-        else:
-            emoji = emoji.emojize(emoji)
-            print(emoji)
-
+    # @commands.group(
+    #     aliases=['rr'], invoke_without_command=True
+    # )
+    # # @commands.guild_only()
+    # # async def add_role(self, ctx, emo=emoji, role=discord.Role):
+    # #     if role is None:
+    # #         await ctx.send("You did not give me a role to add!")
+    # #     else:
+    # #         emo = emoji.emojize(emo)
+    # #         print(emo)
+    # #
 
     @commands.group(
         aliases=['rchannel', 'r_channel']
