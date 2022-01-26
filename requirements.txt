@@ -1,0 +1,4 @@
+discord-components>=2.1.2
+discord>=1.7.3
+python-dotenv>=0.19.2
+emoji>=1.6.3
