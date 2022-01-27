@@ -5,18 +5,24 @@ import emoji
 class Reactions(commands.Cog, name= "Reactions"):
     def __init__(self, bot):
         self.bot = bot
+        self.dict = dict()
 
-    # @commands.group(
-    #     aliases=['rr'], invoke_without_command=True
-    # )
-    # # @commands.guild_only()
-    # # async def add_role(self, ctx, emo=emoji, role=discord.Role):
-    # #     if role is None:
-    # #         await ctx.send("You did not give me a role to add!")
-    # #     else:
-    # #         emo = emoji.emojize(emo)
-    # #         print(emo)
-    # #
+    @commands.group(
+        aliases=['rr'], invoke_without_command=True
+    )
+    @commands.guild_only()
+    @commands.has_permissions(manage_channels=True)
+    async def add_role(self, ctx, emoji, role): # command for adding reactions to the react message
+        if role is None:
+            await ctx.send("You did not give me a role to add!")
+        elif emoji is None:
+            await ctx.send("You did not give me an emoji to add!")
+        else:
+            print(role)
+            await ctx.send(f"Successfully added {emoji} to message!", delete_after=3)
+            self.dict[emoji] = role
+            return self.dict
+
 
     @commands.group(
         aliases=['rchannel', 'r_channel']
@@ -40,29 +46,39 @@ class Reactions(commands.Cog, name= "Reactions"):
         for r in ctx.guild.roles:
             role = ctx.guild.get_role(r.id)
             roles.append(r)
-            print(role)
+            #print(role) uncomment to print every role
             description += f"{role}: {role.id}\n"
 
-        print(roles)
-        embed.description = description
+        #print(roles)
+        #print(self.dict)
 
+        embed.description = description
         message = await channel.send(embed=embed)
 
-        emojis = {
-            '<:cursedsmile:569333374540316687>': 935751825477501018,
-            '<:BUP:390351660028919808>': 2,
-            '<:sunglassescry:635322510820376576>': 3
-
-        }
-
-        for i in range(0, len(emojis)):
-            await message.add_reaction(list(emojis.keys())[i])
+        for i in range(0, len(self.dict)):
+            print("Adding Reactions to message...")
+            await message.add_reaction(list(self.dict.keys())[i])
 
 
         await ctx.send("working...")
 
-        # roled = discord.utils.get(ctx.guild.roles, name="rofl")
-        # print(roled)
+
+    @commands.Cog.listener()
+    async def on_raw_reaction_add(self, payload):
+        emoji = payload.emoji
+        print(emoji)
+        guild = await self.bot.fetch_guild(payload.guild_id)
+        member = await guild.fetch_member(payload.user_id)
+
+        role = self.dict.get(str(emoji))
+        print(role)
+
+        try:
+            new_role = discord.utils.get(guild.roles, name=role)
+            await member.add_roles(new_role)
+        except:
+            new_role = discord.utils.get(guild.roles, id=int(role))
+            await member.add_roles(new_role)
 
 
 def setup(bot):
