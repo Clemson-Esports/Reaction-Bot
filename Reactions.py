@@ -80,6 +80,23 @@ class Reactions(commands.Cog, name= "Reactions"):
             new_role = discord.utils.get(guild.roles, id=int(role))
             await member.add_roles(new_role)
 
+    @commands.Cog.listener()
+    async def on_raw_reaction_remove(self, payload):
+        emoji = payload.emoji
+        print(emoji)
+        guild = await self.bot.fetch_guild(payload.guild_id)
+        member = await guild.fetch_member(payload.user_id)
+
+        role = self.dict.get(str(emoji))
+        print(role)
+
+        try:
+            new_role = discord.utils.get(guild.roles, name=role)
+            await member.remove_roles(new_role)
+        except:
+            new_role = discord.utils.get(guild.roles, id=int(role))
+            await member.remove_roles(new_role)
+
 
 def setup(bot):
     bot.add_cog(Reactions(bot))
