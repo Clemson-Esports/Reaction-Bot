@@ -28,5 +28,8 @@ class CommandErrorHandler(commands.Cog): # class for all error handling
         if isinstance(error, discord.HTTPException):
             await ctx.send("HTTP Error...")
 
+        if isinstance(error, discord.errors.Forbidden):
+            await ctx.send("I am missing permissions!")
+
 def setup(bot):
     bot.add_cog(CommandErrorHandler(bot))
