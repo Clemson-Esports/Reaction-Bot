@@ -5,6 +5,7 @@ import discord_components
 import random
 import ErrorHandling
 import Reactions
+import Help
 
 TOKEN = 'TOKEN'
 GUILD = 'GUILD'
@@ -15,6 +16,8 @@ client = commands.Bot(intents=intents, command_prefix='%')
 def addCog(client):
     ErrorHandling.setup(client)
     Reactions.setup(client)
+    # Help.setup(client)
+    # LiveStreams.setup(client)
 
 @client.event
 async def on_ready(): # bot initialization
@@ -23,6 +26,5 @@ async def on_ready(): # bot initialization
     print(f'{client.user} has connected to Discord!')
     print(f'{GUILD}\n')
     addCog(client)  # adding all related cogs to the bot
-
 
 client.run(TOKEN)
