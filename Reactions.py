@@ -2,7 +2,6 @@ from discord.ext import commands
 import discord
 
 class Reactions(commands.Cog, name= "Reactions"):
-    """Help for Reaction Commands"""
     def __init__(self, bot):
         self.bot = bot
         self.dict = dict()
@@ -14,7 +13,11 @@ class Reactions(commands.Cog, name= "Reactions"):
     @commands.guild_only()
     @commands.has_permissions(manage_channels=True)
     async def add_role(self, ctx, emoji, role): # command for adding reactions to the react message
-        """"""
+        """Call this command to add every role you want
+        before creating the reaction message that you want to display.
+        Usage: %add_role <:emoji:> <role>
+        Attaches chosen emoji to chosen role (you may use either the role ID or name).
+        This command is also callable by the alias: %ar """
         if role is None:
             await ctx.send("You did not give me a role to add!")
         elif emoji is None:
@@ -29,8 +32,10 @@ class Reactions(commands.Cog, name= "Reactions"):
     @commands.guild_only()
     @commands.has_permissions(manage_channels=True)
     async def listroles(self, ctx):
-        """"""
-        embed = discord.Embed(title="Reaction Roles!", color=0xF56600) #Clemson orange embed, of course
+        """Simple command to list all available roles along with their equivalent ids [ Name : ID ]
+        Usage: %listroles"""
+
+        embed = discord.Embed(title="Reaction Roles!", color=0xF56600) #Clemson orange color for embed, of course
         channel = ctx.channel
 
         description = '[ Name : ID ] \n\n'
@@ -54,7 +59,10 @@ class Reactions(commands.Cog, name= "Reactions"):
     @commands.guild_only()
     @commands.has_permissions(manage_channels=True)
     async def reaction_message(self, ctx, description):
-        """"""
+        """Call this command when all desired reaction roles have been created with %add_role.
+        Usage: %reaction_message <'message'>
+        As of right now, surrounding the desired message in quotations is needed if message is more than one word long
+        This command is also callable by the alias: %rm"""
         def convertTuple(tup):
             str = ' '.join(tup)
             return str
