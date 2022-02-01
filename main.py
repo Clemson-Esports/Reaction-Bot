@@ -2,8 +2,6 @@ import discord
 import os
 from discord.ext import commands
 import discord_components
-from discord_slash import SlashCommand
-import random
 import ErrorHandling
 import Reactions
 import Help
@@ -27,7 +25,6 @@ async def on_ready(): # bot initialization
     await client.change_presence(activity=discord.Game(name="Go Tigers! | %help"))
     print(f'{client.user} has connected to Discord!')
     print(f'{GUILD}\n')
-    slash = SlashCommand(client, sync_commands=True)  # adds commands to new slash menu
     client.remove_command('help') # gets rid of default help command on bot
 
     addCog(client)  # adding all related cogs to the bot
