@@ -7,7 +7,7 @@ import Reactions
 import Help
 
 
-TOKEN = 'OTM1NTg0NjUyMDk2MzQwMDQ5.YfAxGw.S_xUlnKuil81KvBtsH9DCff9o-E'
+TOKEN = ''
 GUILD = 'GUILD'
 
 intents = discord.Intents.all()
