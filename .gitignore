@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+Bot_Secrets.json
 
 # C extensions
 *.so
