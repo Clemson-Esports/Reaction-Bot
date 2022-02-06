@@ -23,7 +23,7 @@ class CommandErrorHandler(commands.Cog): # class for all error handling
             await ctx.send("User could not be found! Try again or use %help for more.")
 
         if isinstance(error, commands.CommandOnCooldown):
-            await ctx.send('{} Command is on cooldown, please try again after {:.2f} seconds.'.format(ctx.author.mention, error.retry_after))
+            await ctx.send(f'{ctx.author.mention} Command is on cooldown, please try again after {error.retry_after: .2f} seconds.')
 
         if isinstance(error, discord.HTTPException):
             await ctx.send("HTTP Error...")
