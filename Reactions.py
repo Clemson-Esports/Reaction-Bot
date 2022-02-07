@@ -1,18 +1,18 @@
 from discord.ext import commands
 import discord
+from discord.utils import get
 
-class Reactions(commands.Cog, name= "Reactions"):
+class Reactions(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.dict = dict()
-        # self.message = message
 
     @commands.group(
         aliases=['ar'], invoke_without_command=True
     )
     @commands.guild_only()
     @commands.has_permissions(manage_channels=True)
-    async def add_role(self, ctx, emoji, role): # command for adding reactions to the react message
+    async def add_role(self, ctx, emoji=None, role=None): # command for adding reactions to the react message
         """Call this command to add every role you want
         before creating the reaction message that you want to display.
 
@@ -20,15 +20,25 @@ class Reactions(commands.Cog, name= "Reactions"):
         
         Attaches chosen emoji to chosen role (you may use either the role ID or name).
         This command is also callable by the alias: %ar """
-        if role is None:
-            await ctx.send("You did not give me a role to add!")
-        elif emoji is None:
-            await ctx.send("You did not give me an emoji to add!")
+        if emoji is None:
+            await ctx.send("You forgot to enter an emoji! Try again or type %help for more options.")
+        elif role is None:
+            await ctx.send("You forgot to enter a role! Try again or type %help for more options.")
         else:
-            print(role)
-            await ctx.send(f"Successfully added {emoji} to message!", delete_after=3)
-            self.dict[emoji] = role
-            return self.dict
+            try: # looks for role by id
+                if not get(ctx.guild.roles, id=int(role)):
+                    await ctx.send("Failed to find the inputted role. Try again or type %help for more options")
+                else:
+                    await ctx.send(f"Successfully added {emoji} to message!", delete_after=3)
+                    self.dict[emoji] = role
+                    return self.dict
+            except: # looks for role by name
+                if not get(ctx.guild.roles, name=role):
+                    await ctx.send("Failed to find the inputted role. Try again or type %help for more options")
+                else:
+                    await ctx.send(f"Successfully added {emoji} to message!", delete_after=3)
+                    self.dict[emoji] = role
+                    return self.dict
 
     @commands.group()
     @commands.guild_only()
@@ -46,7 +56,7 @@ class Reactions(commands.Cog, name= "Reactions"):
         for r in ctx.guild.roles:
             role = ctx.guild.get_role(r.id)
             roles.append(r)
-            # print(role) uncomment to print every role
+            #print(role) #uncomment to print every role
             description += f"{role}: {role.id}\n"
 
         embed.description = description
@@ -61,7 +71,7 @@ class Reactions(commands.Cog, name= "Reactions"):
     )
     @commands.guild_only()
     @commands.has_permissions(manage_channels=True)
-    async def reaction_message(self, ctx, description):
+    async def reaction_message(self, ctx, description=None):
         """Call this command when all desired reaction roles have been created with %add_role.
 
         Usage: %reaction_message <'message'>
@@ -69,29 +79,23 @@ class Reactions(commands.Cog, name= "Reactions"):
         As of right now, surrounding the desired message in quotations is needed if message is more than one word long
         This command is also callable by the alias: %rm"""
 
-        def convertTuple(tup):
-            str = ' '.join(tup)
-            return str
-
         channel = ctx.channel
         try:
             await channel.send("Testing that I can send messages in this channel...", delete_after=3)
+
+            if description is None:  # makes sure user inputting command gives a description
+                await ctx.send("No description was provided, try again or type %help for more options.")
+                return
+            else:
+                description = description
+                message = await ctx.channel.send(description)
+
+                for i in range(0, len(self.dict)):
+                    print("Adding Reactions to message...")
+                    await message.add_reaction(list(self.dict.keys())[i])
         except:
             await ctx.send("I can not send messages in this channel, I am missing permissions!")
             return
-
-        if description is None: # makes sure user inputting command gives a description
-            await ctx.send("No description was provided, try again...")
-            return
-        else:
-            description = description
-            embed = discord.Embed(title="Reaction Roles!", description=convertTuple(description))
-            message = await ctx.channel.send(description)
-
-            for i in range(0, len(self.dict)):
-                print("Adding Reactions to message...")
-                await message.add_reaction(list(self.dict.keys())[i])
-
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
@@ -99,7 +103,6 @@ class Reactions(commands.Cog, name= "Reactions"):
         print(emoji)
         guild = await self.bot.fetch_guild(payload.guild_id)
         member = await guild.fetch_member(payload.user_id)
-
 
         role = self.dict.get(str(emoji))
         #print(role)
