@@ -7,6 +7,7 @@ class CommandErrorHandler(commands.Cog): # class for all error handling
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
+        print(error)
 
         if isinstance(error, commands.RoleNotFound):
             await ctx.send("Selected role not found! Try again or use %help for more.")
