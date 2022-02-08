@@ -10,7 +10,7 @@ class CommandErrorHandler(commands.Cog): # class for all error handling
         print(error)
 
         if isinstance(error, commands.RoleNotFound):
-            await ctx.send("Selected role not found! Try again or use %help for more.")
+            await ctx.send("Inputted role not found! Try again or use %help for more.")
 
         if isinstance(error, commands.MemberNotFound):
             await ctx.send("Member not found! Try again or use %help for more.")

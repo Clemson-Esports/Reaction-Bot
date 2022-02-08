@@ -35,5 +35,10 @@ class Help(commands.Cog):
             if not command_found:
                 await ctx.send(f"Failed to find help for '{command}'. Try again or type %help for more options.")
 
+    @commands.Cog.listener()
+    async def on_message(self, ctx): # if the bot is tagged, responds with the help menu
+        if self.bot.user.mentioned_in(ctx):
+            await Help.help(self, ctx)
+
 def setup(bot):
     bot.add_cog(Help(bot))
